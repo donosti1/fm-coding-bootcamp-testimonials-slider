@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ComponentRef, useEffect} from "react";
 import {Image, Stack, Text} from "@chakra-ui/react";
 import Slider from "react-slick";
 import "../slider.css";
@@ -93,63 +93,65 @@ const Slides = sliderData.map((sl) => (
     testimonial={sl.testimonial}
   />
 ));
+
+function SamplePrevArrow(props: any) {
+  const {className, style, onClick} = props;
+
+  return (
+    <Stack
+      alignItems="center"
+      backgroundColor="white"
+      borderLeftRadius="50%"
+      bottom={["50%", -5]}
+      boxShadow="-4px 4px 6px 4px rgba(0,0,0,.2)"
+      className={className}
+      display="flex"
+      height={10}
+      justifyContent="center"
+      right={["40%", 80]}
+      style={{
+        ...style,
+        display: "flex",
+        transform: "translateX(-40px)",
+      }}
+      width={10}
+      zIndex="100"
+      onClick={onClick}
+    >
+      <Image src="/assets/icon-prev.svg" />
+    </Stack>
+  );
+}
+function SampleNextArrow(props: any) {
+  const {className, style, onClick} = props;
+
+  return (
+    <Stack
+      alignItems="center"
+      backgroundColor="white"
+      borderRightRadius="50%"
+      bottom={["50%", -5]}
+      boxShadow="4px 4px 6px 4px rgba(0,0,0,.2)"
+      className={className}
+      display="flex"
+      height={10}
+      justifyContent="center"
+      right={["40%", 80]}
+      style={{
+        ...style,
+        display: "flex",
+      }}
+      width={10}
+      zIndex="100"
+      onClick={onClick}
+    >
+      <Image src="/assets/icon-next.svg" />
+    </Stack>
+  );
+}
 const App: React.FC = () => {
-  function SampleNextArrow(props: any) {
-    const {className, style, onClick} = props;
+  const sliderRef = React.useRef<Slider>(null);
 
-    return (
-      <Stack
-        alignItems="center"
-        backgroundColor="white"
-        borderRightRadius="50%"
-        bottom={["50%", -5]}
-        boxShadow="4px 4px 6px 4px rgba(0,0,0,.2)"
-        className={className}
-        display="flex"
-        height={10}
-        justifyContent="center"
-        right={["40%", 80]}
-        style={{
-          ...style,
-          display: "flex",
-        }}
-        width={10}
-        zIndex="100"
-        onClick={onClick}
-      >
-        <Image src="/assets/icon-next.svg" />
-      </Stack>
-    );
-  }
-
-  function SamplePrevArrow(props: any) {
-    const {className, style, onClick} = props;
-
-    return (
-      <Stack
-        alignItems="center"
-        backgroundColor="white"
-        borderLeftRadius="50%"
-        bottom={["50%", -5]}
-        boxShadow="-4px 4px 6px 4px rgba(0,0,0,.2)"
-        className={className}
-        display="flex"
-        height={10}
-        justifyContent="center"
-        right={["40%", 80]}
-        style={{
-          ...style,
-          display: "flex",
-          transform: "translateX(-40px)",
-        }}
-        width={10}
-        zIndex="100"
-        onClick={onClick}
-      >
-        <Image src="/assets/icon-prev.svg" />
-      </Stack>
-    );
-  }
   var settings = {
     infinite: true,
     speed: 500,
@@ -168,6 +170,17 @@ const App: React.FC = () => {
     ],
   };
 
+  useEffect(() => {
+    function slide(y: number) {
+      if (sliderRef) {
+        y > 0 ? sliderRef.current!.slickNext() : sliderRef.current!.slickPrev();
+      }
+    }
+    window.addEventListener("wheel", (e) => {
+      slide(e.deltaY);
+    });
+  }, []);
+
   return (
     <Stack
       backgroundColor="white"
@@ -182,7 +195,9 @@ const App: React.FC = () => {
       spacing={0}
       width="100%"
     >
-      <Slider {...settings}>{Slides}</Slider>
+      <Slider {...settings} ref={sliderRef}>
+        {Slides}
+      </Slider>
     </Stack>
   );
 };
