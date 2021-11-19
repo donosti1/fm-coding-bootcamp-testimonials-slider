@@ -118,7 +118,7 @@ function SamplePrevArrow(props: any) {
       zIndex="100"
       onClick={onClick}
     >
-      <Image src="/assets/icon-prev.svg" />
+      <Image alt="icon" src="/assets/icon-prev.svg" />
     </Stack>
   );
 }
@@ -145,7 +145,7 @@ function SampleNextArrow(props: any) {
       zIndex="100"
       onClick={onClick}
     >
-      <Image src="/assets/icon-next.svg" />
+      <Image alt="icon" src="/assets/icon-next.svg" />
     </Stack>
   );
 }
